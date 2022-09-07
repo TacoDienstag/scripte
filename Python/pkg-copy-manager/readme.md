@@ -42,8 +42,3 @@ The programm finishes with the exit message:
 ## Authors
 
 - [@aw-bkollmer](https://www.github.com/aw-bkollmer)
-
-
-
-![IMG](https://i.imgur.com/ehLeEAq.png)
-
