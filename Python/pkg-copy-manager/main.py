@@ -75,10 +75,10 @@ def main():
         # check if paths are valid
         print(str(args.localPath[0]))
         if not os.path.isdir(args.localPath[0]):
-            print("Local path is not valid, please check if it exists.")
+            print("ERROR: Local path is not valid, please check if it exists.")
             exit(1)
         if not os.path.isdir(args.remotePath[0]):
-            print("Remote path is not valid, please check if it exists.")
+            print("ERROR: Remote path is not valid, please check if it exists.")
             exit(1)
 
         localPath = args.localPath[0]
@@ -94,7 +94,7 @@ def main():
 
     # check if there are any .pkg files in the local folder
     if len(localFiles) == 0:
-        print("There are no .pkg files in the local folder.")
+        print("INFO: There are no .pkg files in the local folder.")
         exit(1)
 
     # Print the list of files in the Local folder
