@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+# !/usr/bin/python3
 # Python script to copy and delete Files in / to Google Drive
 # Script owned by Apfelwerk GmbH & Co.KG
 # Written by Benjamin Kollmer
@@ -9,7 +9,6 @@ import os, shutil, argparse
 
 # Placeholder
 ph = "-" * 15
-
 
 def compare_files(array, remoteFiles):
     # Check if filenames from Local exists in Google Drive
@@ -117,11 +116,11 @@ def main():
         array[fnum.split("_", maxsplit=1)[0]] = obj
 
     # Check if filenames from Local exists in Google Drive
-    print("\n", ph, "Check if file exists in Google Drive", ph, "\n")
+    print("\n", ph, "Check if file exists in destination folder", ph, "\n")
     array = compare_files(array, remoteFiles)
 
     # Copy files to Google Drive
-    print("\n", ph, "Update files in Google Drive", ph, "\n")
+    print("\n", ph, "Update files in destination folder", ph, "\n")
     update_files(array, remotePath)
 
     print("\n", ph, "Task ran successfully! Exiting... ", ph, "\n")
