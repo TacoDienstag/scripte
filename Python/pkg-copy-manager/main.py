@@ -1,5 +1,5 @@
 # !/usr/bin/python3
-# Python script to copy and delete Files in / to Google Drive
+# Python script to copy and delete Files in / to destination folder
 # Script owned by Apfelwerk GmbH & Co.KG
 # Written by Benjamin Kollmer
 # Copyright 07.09.2022
@@ -11,13 +11,13 @@ import os, shutil, argparse
 ph = "-" * 15
 
 def compare_files(array, remoteFiles):
-    # Check if filenames from Local exists in Google Drive
+    # Check if filenames from Local exists in destination folder
     for lfname in remoteFiles:
         if lfname in remoteFiles:
             try:
                 array[lfname.split("_", maxsplit=1)[0]]["exists"] = True
                 array[lfname.split("_", maxsplit=1)[0]]["oldName"] = lfname
-                print("INFO-File: " + lfname + " exists in Google Drive")
+                print("INFO-File: " + lfname + " exists in destination folder")
             except:
                 array[lfname.split("_", maxsplit=1)[0]]["oldName"] = lfname
                 print("WARN-File: " + lfname + " does not exist on local disk")
@@ -27,25 +27,25 @@ def compare_files(array, remoteFiles):
 
 
 def update_files(array, remotePath):
-    # Copy files to Google Drive
+    # Copy files to destination folder
     for file in array:
         if array[file]["fileName"] == array[file]["oldName"]:
             print("SKIP-File: " + file + " is already up to date, skipping")
         else:
             if array[file]["exists"] == False:
                 shutil.copy2(array[file]["path"], remotePath)
-                print("CP-File: " + array[file]["fileName"] + " copied to Google Drive")
+                print("CP-File: " + array[file]["fileName"] + " copied to destination folder")
             else:
-                # remove old file from Google Drive
+                # remove old file from destination folder
                 print("RM-File: removing old version " + array[file]["oldName"])
                 os.remove(os.path.join(remotePath, array[file]["oldName"]))
 
-                # replace file in Google Drive with newer version
+                # replace file in destination folder with newer version
                 shutil.copy2(array[file]["path"], remotePath)
                 print(
                     "CP-File: "
                     + array[file]["fileName"]
-                    + " copied newer version, to Google Drive"
+                    + " copied newer version, to destination folder"
                 )
 
 
@@ -62,7 +62,7 @@ def main():
         "-rp",
         "--remotePath",
         nargs=1,
-        help="Path to remote package folder (e.g. Google Drive).  Must supply <remote-path>",
+        help="Path to remote package folder (e.g. destination folder).  Must supply <remote-path>",
     )
     args = parser.parse_args()
 
@@ -83,7 +83,7 @@ def main():
         localPath = args.localPath[0]
         remotePath = args.remotePath[0]
 
-    # Create a list of all the files in the Google Drive folder and  filter pkg files
+    # Create a list of all the files in the destination folder folder and  filter pkg files
     remoteFiles = os.listdir(remotePath)
     remoteFiles = [x for x in remoteFiles if x.endswith(".pkg")]
 
@@ -115,11 +115,11 @@ def main():
         }
         array[fnum.split("_", maxsplit=1)[0]] = obj
 
-    # Check if filenames from Local exists in Google Drive
+    # Check if filenames from Local exists in destination folder
     print("\n", ph, "Check if file exists in destination folder", ph, "\n")
     array = compare_files(array, remoteFiles)
 
-    # Copy files to Google Drive
+    # Copy files to destination folder
     print("\n", ph, "Update files in destination folder", ph, "\n")
     update_files(array, remotePath)
 
