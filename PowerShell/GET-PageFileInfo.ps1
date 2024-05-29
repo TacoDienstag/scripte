@@ -9,30 +9,26 @@ $Channels = @()
 
 # Populate the channel data with page file information
 $Channels += [pscustomobject]@{
-    'channel'="FilePath";
+    'channel' = "FilePath";
+    'value' = 0  # Since FilePath is a string, provide a dummy numeric value if necessary
     'text' = $PageFileResults.Description
 }
-
 $Channels += [pscustomobject]@{
-    'channel'="TotalSize(in MB)";
+    'channel' = "TotalSize(in MB)";
     'value' = $PageFileResults.AllocatedBaseSize
 }
-
 $Channels += [pscustomobject]@{
-    'channel'="CurrentUsage(in MB)";
-    'text' = $PageFileResults.CurrentUsage
+    'channel' = "CurrentUsage(in MB)";
+    'value' = $PageFileResults.CurrentUsage
 }
-
 $Channels += [pscustomobject]@{
-    'channel'="PeakUsage(in MB)";
-    'text' = $PageFileResults.PeakUsage
+    'channel' = "PeakUsage(in MB)";
+    'value' = $PageFileResults.PeakUsage
 }
-
 $Channels += [pscustomobject]@{
-    'channel'="TempPageFileInUse";
-    'text' = $PageFileResults.TempPageFile
+    'channel' = "TempPageFileInUse";
+    'value' = [int]$PageFileResults.TempPageFile  # Assuming this returns a boolean, convert it to int
 }
-
 # Prepare the data for JSON conversion
 $prtg = [pscustomobject]@{
     prtg = [pscustomobject]@{
@@ -41,7 +37,8 @@ $prtg = [pscustomobject]@{
 }
 
 # Convert to JSON
-$JsonResult = $prtg | ConvertTo-Json -Depth 10
+#$JsonResult = $prtg | ConvertTo-Json -Depth 10
+$prtg | ConvertTo-Json -Depth 10
 
 # Output JSON result
-Write-Output $JsonResult
+#Write-Output $JsonResult
