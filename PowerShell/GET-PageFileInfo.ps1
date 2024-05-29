@@ -3,6 +3,20 @@
 
 # Retrieve page file usage and computer system information
 $PageFileResults = Get-CimInstance -Class Win32_PageFileUsage -ComputerName $Computer
+$ComputerSystemResults = Get-CimInstance -Class Win32_ComputerSystem -ComputerName $Computer
+
+
+# Decide if Pagefile is auto or manuell and set Int according to bool
+if ($ComputerSystemResults.AutomaticManagedPagefile == True)
+{
+    $PagefileMode = 1
+}else{
+    $PagefileMode = 0
+}
+
+# Calculate the percentage of free pagefile size
+$PageFileUsedPercentage = ($PageFileResults.CurrentUsage / $PageFileResults.AllocatedBaseSize) * 100
+
 
 # Create a collection to hold channel data
 $Channels = @()
@@ -14,8 +28,20 @@ $Channels += [pscustomobject]@{
     'text' = $PageFileResults.Description
 }
 $Channels += [pscustomobject]@{
+   'channel' = "PagefileMode(0 = Manuell, 1 = Auto)";
+   'value' = $PagefileMode
+}
+$Channels += [pscustomobject]@{
     'channel' = "TotalSize(in MB)";
     'value' = $PageFileResults.AllocatedBaseSize
+}
+$Channels += [pscustomobject]@{
+    'channel' = "FreePageFilesize(in %)";
+    'value' = $PageFileUsedPercentage
+    'unit' = "Percent";
+    'float' = 1
+    'limitMaxWarning' = "75";
+    'limitMaxError' = "90";
 }
 $Channels += [pscustomobject]@{
     'channel' = "CurrentUsage(in MB)";
